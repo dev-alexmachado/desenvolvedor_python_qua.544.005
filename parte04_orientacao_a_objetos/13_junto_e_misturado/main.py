@@ -7,12 +7,12 @@ from model import ContaCorrente,ContaPoupanca,Pessoa
 def limpar():
     os.system("cls" if os.name == "nt" else "clear")
 
-# TODO: terminar função operacoes()
 def operacoes(agencia,conta,usuario):
     if conta == "1":
         conta = ContaCorrente(
             agencia=agencia,
             n_conta=f"{random.randint(10000,99999)}-1",
+            tipo_conta="Conta Corrente",
             saldo=0.0,
             titular=usuario,
             taxa=0.01
@@ -21,9 +21,10 @@ def operacoes(agencia,conta,usuario):
         conta = ContaPoupanca(
             agencia=agencia,
             n_conta=f"{random.randint(10000,99999)}-2",
+            tipo_conta="Conta Poupança",
             saldo=0.0,
             titular=usuario,
-            juros=0.01
+            juros=0.1
         )
     while True:
         print("0 - Sair do programa")
@@ -31,18 +32,28 @@ def operacoes(agencia,conta,usuario):
         print("2 - Depositar dinheiro")
         print("3 - Sacar dinheiro")
         opcao = input("Operação desejada: ").strip()
+        limpar()
         match opcao:
             case "0":
                 break
             case "1":
-                # TODO
-                pass
+                conta.consultar()
+                continue
             case "2":
-                # TODO
-                pass
+                valor = float(input("Informe o valor do depósito: R$ ").replace(",","."))
+                saldo = conta.depositar(valor)
+                limpar()
+                print(f"Depósito efetuado com sucesso. Saldo atual: R$ {saldo:.2f}")
+                continue
             case "3":
-                # TODO
-                pass
+                valor = float(input("Informe o valor do saque: R$ ").replace(",","."))
+                if valor < conta.saldo:
+                    saldo = conta.sacar(valor)
+                    limpar()
+                    print(f"Saque efetuado com sucesso. Saldo atual: R$ {saldo:.2f}")
+                else:
+                    print("Saque não permitido.")
+                continue
             case _:
                 print("Opção inválida.")
                 continue
